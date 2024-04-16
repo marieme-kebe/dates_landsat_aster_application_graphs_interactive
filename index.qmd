@@ -84,7 +84,7 @@ bar_plot<- final_df |>
     axis.ticks.y=element_blank(),   # masquer les ticks de l'axe des ordonnées
     strip.background = element_rect(fill="white", color="gray", linewidth=1),
     axis.title=element_blank(),    # omettre l'axe des ordonnées
-    axis.text.x=element_text(size=10, face="bold", hjust=.5), # étiquette de l'axe des abscisses
+    axis.text.x=element_text(size=7, face="bold", hjust=.5), # étiquette de l'axe des abscisses
     strip.text=element_text(size=12, face="bold", hjust=.5), # titre des panels graphiques
     plot.title=element_blank(), # masquer le titre du graphique
     plot.background=element_rect(fill="white", color=NA), # couleur du fond du plan
