@@ -76,7 +76,8 @@ temperature_stats<- function(bands_folder_path, favelas_db){
       Mediane = base::double(),
       Ecart.Type = base::double(),
       Min. = base::double(),
-      Max. = base::double()
+      Max. = base::double(),
+      NB_pixel = base::double()
     )
     
     # itération sur chaque favelas pour calculer les températures moyennes
@@ -99,7 +100,8 @@ temperature_stats<- function(bands_folder_path, favelas_db){
         Mediane = stats::median(masked_rast[], na.rm=TRUE),
         Ecart.Type = stats::sd(masked_rast[], na.rm=TRUE),
         Min. = base::min(masked_rast[], na.rm=TRUE),
-        Max. = base::max(masked_rast[], na.rm=TRUE)
+        Max. = base::max(masked_rast[], na.rm=TRUE),
+        NB_pixel = base::length(stats::na.omit(masked_rast[]))
       )
       
       # ajout à la tabl initialisé
@@ -126,7 +128,8 @@ statistics_results<- tibble::tibble(
   Mediane = base::double(),
   Ecart.Type = base::double(),
   Min. = base::double(),
-  Max. = base::double()
+  Max. = base::double(),
+  NB_pixel = base::double()
 )
 
 # loop
@@ -146,7 +149,7 @@ statistics_results<- dplyr::mutate(
 temperature_line_plot<- statistics_results |>
   group_by(Favelas) |>
   ggplot() +
-  geom_line(aes(x=Date, y=Moyenne, color=Favelas), linewidth=1) +
+  geom_line(aes(x=Date, y=Moyenne, color=Favelas), linewidth=.5) +
   # améliorer l'axe des abscisses
   scale_x_date(date_breaks = "1 year", date_labels="%Y", expand=c(0.01, 0.01))+
   scale_y_continuous(expand=c(0.01, 0.01), trans="log",
@@ -164,20 +167,21 @@ temperature_line_plot<- statistics_results |>
   scale_color_manual(values=c(
     "#ff007f", "green", "cyan", "#6BAED6", "#FEB24C"
   )) +
+  theme_bw()+
   theme(
     strip.background = element_rect(fill="white", color="gray", linewidth=1),
     axis.title=element_blank(),    # omettre l'axe des ordonnées
-    axis.text=element_text(size=18, hjust=.5), # étiquette de l'axe des abscisses
+    axis.text=element_text(size=12, hjust=.5), # étiquette de l'axe des abscisses
     plot.title=element_blank(), # masquer le titre du graphique
     plot.background=element_rect(fill="white", color=NA), # couleur du fond du plan
     plot.margin=margin(rep(.3, 4), unit="cm"),
-    panel.background=element_rect(fill="white", color="gray", linewidth=1),
+    # panel.background=element_rect(fill="white", color="gray", linewidth=1),
     panel.spacing.x=unit(3, "cm"),
     panel.spacing.y=unit(10, "cm"),
-    panel.grid=element_line(color="gray", linewidth=.35),
+    # panel.grid=element_line(color="gray", linewidth=.35),
     legend.position=c(.94, .08),
     legend.title=element_blank(),
-    legend.text=element_text(size=18, margin=margin(l=-.02, unit="cm")),
+    legend.text=element_text(size=12, margin=margin(l=-.02, unit="cm")),
     legend.key=element_blank(),
     legend.background=element_blank()
   )
@@ -192,11 +196,11 @@ plotly::ggplotly(temperature_line_plot)
 
 ```{r warning=FALSE, message=FALSE}
 #| label: tbl-planet-measures
-#| tbl-cap: Astronomical object
+#| tbl-cap: Statistiques des températures LANDSAT dans quelques Favelas
 #| echo: false
 
 kableExtra::kable(statistics_results) |>
-kableExtra::kable_styling(font_size = 14)
+kableExtra::kable_styling(font_size = 16)
 ```
 
 :::
