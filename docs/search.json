@@ -18,7 +18,11 @@
     "href": "dates_produits.html",
     "title": "Disponibilité des images ASTER et LANDSAT sur la période [2016-2024]",
     "section": "",
-    "text": "Back to top"
+    "text": "Back to top",
+    "crumbs": [
+      "Dates Produits",
+      "Disponibilité des images ASTER et LANDSAT sur la période [2016-2024]"
+    ]
   },
   {
     "objectID": "evolution_landsat_temperature.html",

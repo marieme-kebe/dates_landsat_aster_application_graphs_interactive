@@ -57,49 +57,33 @@ dates_df<- tibble::tibble(Date = dates_vect)
 final_df<- dplyr::full_join(dates_df, dates_products, by = "Date")
 
 ## Tracer le graphique des dates
-
-final_df<- dplyr::mutate(final_df, Annee=base::as.factor(lubridate::year(Date)),
-                         hauteur=dplyr::case_when(base::is.na(Produit)~0, TRUE~25),
-                         Produit=dplyr::case_when(base::is.na(Produit)~" ", TRUE~Produit),)
-
-# graphique
-bar_plot<- final_df |>
-  ggplot(na.rm = TRUE) +
-  geom_bar(aes(x=Date, y=hauteur, fill=Produit, width=hauteur), width = 15,
-           stat="identity", position=position_dodge2(padding=0.2))+
-  facet_wrap(vars(Annee), scales = "free_x") +
-  # améliorer l'axe des abscisses
-  scale_x_date(date_breaks = "1 months", date_labels="%b", expand=c(0.01, 0.01))+
-    scale_y_continuous(expand=c(0.01, 0.01))+
-  # la légende
-  ggplot2::guides(
-    fill = ggplot2::guide_legend(
-      keywidth=unit(0.4, "cm"), keyheight = unit(.8, "cm")
+final_df<- dplyr::mutate(
+  final_df, Annee=lubridate::year(Date),
+  Mois=lubridate::month(Date),
+  Mois = dplyr::case_when(
+    Mois == 1 ~ "Janvier", Mois == 2 ~ "Février", Mois == 3 ~ "Mars",
+    Mois == 4 ~ "Avril", Mois == 5 ~ "Mai", Mois == 6 ~ "Juin",
+    Mois == 7 ~ "Juillet", Mois == 8 ~ "Août", Mois == 9 ~ "Septembre",
+    Mois == 10 ~ "Octobre", Mois == 11 ~ "Novembre", Mois == 12 ~ "Décembre"
+  ),
+  Mois = base::factor(
+    Mois, levels=c(
+      "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+      "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
     )
-  ) +
-  # défnir les couleurs du graphiques
-  scale_fill_manual(values=c("white", "#FEB24C", "#6BAED6")) +
-  theme(
-    axis.text.y=element_blank(), # masquer les étiquettes dans l'axe des ordonnées
-    axis.ticks.y=element_blank(),   # masquer les ticks de l'axe des ordonnées
-    strip.background = element_rect(fill="white", color="gray", linewidth=1),
-    axis.title=element_blank(),    # omettre l'axe des ordonnées
-    axis.text.x=element_text(size=7, face="bold", hjust=.5), # étiquette de l'axe des abscisses
-    strip.text=element_text(size=12, face="bold", hjust=.5), # titre des panels graphiques
-    plot.title=element_blank(), # masquer le titre du graphique
-    plot.background=element_rect(fill="white", color=NA), # couleur du fond du plan
-    plot.margin=margin(rep(.3, 4), unit="cm"),
-    # panel.background=element_rect(fill="white", color="gray", linewidth=1),
-    panel.spacing.x=unit(3, "cm"),
-    panel.spacing.y=unit(10, "cm"),
-    panel.grid=element_blank(),
-    legend.position=c(.96, .08),
-    legend.title=element_blank(),
-    legend.text=element_text(size=14, margin=margin(l=-.02, unit="cm")),
-    legend.key=element_blank(),
-    legend.background=element_blank()
-  )
+  ),
+  hauteur=dplyr::case_when(base::is.na(Produit)~0, TRUE~25),
+  Produit=dplyr::case_when(base::is.na(Produit)~NA, TRUE~Produit)
+)
 
-# intractive plot
-plotly::ggplotly(bar_plot)
+scatter<- final_df |>
+  na.omit() |>
+  ggplot() +
+  geom_point(
+    aes(x=Mois, y=Date, fill=Produit), color="gray",  size = 3, 
+    shape = 22, position=position_dodge(width=.1)
+  ) +
+  scale_y_date(date_breaks = "1 year", date_labels="%Y", expand=c(0.01, 0.01))
+
+ggplotly(scatter)
 ```
