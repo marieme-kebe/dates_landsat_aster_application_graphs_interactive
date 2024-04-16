@@ -85,5 +85,6 @@ scatter<- final_df |>
   ) +
   scale_y_date(date_breaks = "1 year", date_labels="%Y", expand=c(0.01, 0.01))
 
+# transformer le graph ggplot en graph iteractive
 ggplotly(scatter)
 ```
