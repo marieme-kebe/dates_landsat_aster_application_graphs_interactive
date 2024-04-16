@@ -97,7 +97,10 @@ plotly::ggplotly(
     aes(x=Mois, y=Date, fill=Produit), color="gray",  size = 3, 
     shape = 22, position=position_dodge(width=.3)
   ) +
-  scale_y_date(date_breaks = "1 year", date_labels="%Y", expand=c(0.01, 0.01)) + 
+  scale_y_date(
+    date_breaks = "1 year", date_labels="%Y", 
+    expand=c(0.01, 0.01), limits=c(as.Date("2016/01/01"), as.Date("2024/03/31"))
+  ) + 
   # défnir les couleurs du graphiques
   scale_fill_manual(values=c("#FEB24C", "#6BAED6")) +
   theme_bw()+
@@ -154,7 +157,7 @@ plotly::ggplotly(
     # panel.background=element_rect(fill="white", color="gray", linewidth=1),
     panel.spacing.x=unit(3, "cm"),
     panel.spacing.y=unit(10, "cm"),
-    panel.grid=element_blank(),
+    panel.grid=element_blank()search?q=github+login&sca_esv=9b107820ee34c717&sxsrf=ACQVn08W9oYeJAleCfWPG2JQrUqEAUBC5g%3A1713309201168&ei=EQYfZpj2CZqfkdUPl-mdUA&oq=github+logi&gs_lp=Egxnd3Mtd2l6LXNlcnAiC2dpdGh1YiBsb2dpKgIIADILEAAYgAQYsQMYgwEyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMggQABiABBjLATIFEAAYgAQyCBAAGIAEGMsBMggQABiABBjLATIIEAAYgAQYywFI-hhQlQhY_w1wAngBkAEAmAE6oAHhAaoBATS4AQHIAQD4AQGYAgagAv8BwgIKEAAYRxjWBBiwA8ICDRAAGIAEGIoFGEMYsAPCAhkQLhiABBiKBRhDGMcBGNEDGMgDGLAD2AEBwgIKEAAYgAQYFBiHApgDAIgGAZAGC7oGBAgBGAiSBwE2oAfSEw&sclient=gws-wiz-serp,
     legend.position=c(.96, .08),
     legend.title=element_blank(),
     legend.text=element_text(size=12, margin=margin(l=-.02, unit="cm")),
