@@ -26,7 +26,7 @@ website:
       contents:
         - section: "Dates Produits"
           contents: 
-            - dates_produits.qmd
+            - index.qmd
         - section: "Dynamique Températures"
           contents: 
             - evolution_landsat_temperature.qmd
