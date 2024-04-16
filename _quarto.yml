@@ -17,19 +17,19 @@ website:
     left: "&copy; Copyright 2024, Marieme KEBE"
     right: "This page is built with [GitHub](https://github.com/) and [Quarto](https://quarto.org/)."
 
-  # sidebar:
-  #   - id: site_web
-  #     logo: img/logo_upc.jpg
-  #     collapse-level: 4
-  #     style: "docked"
-  #     # background: light
-  #     contents:
-  #       - section: "Cartographie interactive"
-  #         contents: 
-  #           - interactive_map.qmd
-  #       - section: "Cartographie thématique (statique)"
-  #         contents: 
-  #           - static_map.qmd
+  sidebar:
+    # - id: site_web
+      # logo: img/logo_upc.jpg
+      collapse-level: 4
+      style: "docked"
+      # background: light
+      contents:
+        - section: "Dates Produits"
+          contents: 
+            - dates_produits.qmd
+        - section: "Dynamique Températures"
+          contents: 
+            - evolution_landsat_temperature.qmd
 
   navbar:
     logo: img/site_logo.png
@@ -78,7 +78,7 @@ website:
 format:
   html:
     grid:
-      sidebar-width: 0px
+      sidebar-width: 350px
       margin-width: 0px
       body-width: 1250px
     theme: 

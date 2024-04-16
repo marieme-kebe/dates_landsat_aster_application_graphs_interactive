@@ -1,0 +1,105 @@
+---
+title: "Disponibilité des images ASTER et LANDSAT sur la période [2016-2024]"
+format: 
+  html:
+    fig-width: 25
+    fig-height: 25
+---
+
+```{r error=TRUE, warning=FALSE, message=FALSE}
+#| echo: false
+
+# Charger les packages nécessaires
+library(readxl)
+library(tidyverse)
+library(shiny)
+library(plotly)
+
+# lire le fichier contenant les metadonnées LANDSAT
+landsat_metadata<- readxl::read_excel(
+  "./data/pourcentage_de_nuages_landsat8.xlsx"
+)[-1] |>
+  # filter pour ne retenir que les images avec -10% de nuages
+  dplyr::filter(pct_nuage<10)
+
+# Extraire la date des images LANDSAT dans le dataframe `landsat_metadata`
+landsat_dates<- base::data.frame(Date = landsat_metadata$dateprod, Produit = "LANDSAT")
+
+# Lire le fichier contenat les dates LANDSAT
+aster_dates<- utils::read.csv(
+  "./data/ASTER_dates.csv"
+) |>
+  # supprimer les doublons
+  dplyr::mutate(Produit = "ASTER") |>
+  dplyr::distinct()
+
+# Générer une séquence de dates sur la période 2016-2024 au pas de temps journalier.
+dates_vect<- base::seq.Date(
+  from = base::as.Date("2016-01-01"),
+  to = base::as.Date("2024/12/31"),
+  by = "day"
+)
+
+# concantener les tables LANDSAT et ASTER pour n'en faire qu'une seule table
+dates_products<- dplyr::bind_rows(landsat_dates, aster_dates) |>
+  dplyr::mutate(Date = base::as.Date(Date))
+
+
+## Créer un dataframe avec une seule colonne correspondant au vecteur de dates créée plus haut
+dates_df<- tibble::tibble(Date = dates_vect)
+
+#* effectuer une jointure `full_join` de la table `dates_df` contenant la séquence de dates
+#* journalières du `01/01/2016` au `31/03/2024` avec la table contenant les dates LANDSAT
+#* et ASTER. Toutes les dates où il n'y a pas d'images ASTER ou LANDSAT aura des valeurs NA,
+#*  qui seront remplacé par le caractère vide `("")` pour la visualisation
+
+# jointure
+final_df<- dplyr::full_join(dates_df, dates_products, by = "Date")
+
+## Tracer le graphique des dates
+
+final_df<- dplyr::mutate(final_df, Annee=base::as.factor(lubridate::year(Date)),
+                         hauteur=dplyr::case_when(base::is.na(Produit)~0, TRUE~25),
+                         Produit=dplyr::case_when(base::is.na(Produit)~" ", TRUE~Produit),)
+
+# graphique
+bar_plot<- final_df |>
+  ggplot(na.rm = TRUE) +
+  geom_bar(aes(x=Date, y=hauteur, fill=Produit, width=hauteur), width = 15,
+           stat="identity", position=position_dodge2(padding=0.2))+
+  facet_wrap(vars(Annee), scales = "free_x") +
+  # améliorer l'axe des abscisses
+  scale_x_date(date_breaks = "1 months", date_labels="%b", expand=c(0.01, 0.01))+
+    scale_y_continuous(expand=c(0.01, 0.01))+
+  # la légende
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(
+      keywidth=unit(0.4, "cm"), keyheight = unit(.8, "cm")
+    )
+  ) +
+  # défnir les couleurs du graphiques
+  scale_fill_manual(values=c("white", "#FEB24C", "#6BAED6")) +
+  theme(
+    axis.text.y=element_blank(), # masquer les étiquettes dans l'axe des ordonnées
+    axis.ticks.y=element_blank(),   # masquer les ticks de l'axe des ordonnées
+    strip.background = element_rect(fill="white", color="gray", linewidth=1),
+    axis.title=element_blank(),    # omettre l'axe des ordonnées
+    axis.text.x=element_text(size=7, face="bold", hjust=.5), # étiquette de l'axe des abscisses
+    strip.text=element_text(size=12, face="bold", hjust=.5), # titre des panels graphiques
+    plot.title=element_blank(), # masquer le titre du graphique
+    plot.background=element_rect(fill="white", color=NA), # couleur du fond du plan
+    plot.margin=margin(rep(.3, 4), unit="cm"),
+    # panel.background=element_rect(fill="white", color="gray", linewidth=1),
+    panel.spacing.x=unit(3, "cm"),
+    panel.spacing.y=unit(10, "cm"),
+    panel.grid=element_blank(),
+    legend.position=c(.96, .08),
+    legend.title=element_blank(),
+    legend.text=element_text(size=14, margin=margin(l=-.02, unit="cm")),
+    legend.key=element_blank(),
+    legend.background=element_blank()
+  )
+
+# intractive plot
+plotly::ggplotly(bar_plot)
+```
