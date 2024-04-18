@@ -99,14 +99,14 @@ a.navbar-brand:nth-child(1) {
 
 .sidebar-item-container{
     font-family: "Oleo Script", 'Merriweather', 'Roboto', $headings-font-family;
-    font-size: $font-size-base * .8;
+    font-size: $font-size-base * .9;
     line-height: 1.1em !important;
     // color: $black !important;
 }
 
 a.sidebar-item-text.sidebar-link.text-start{
     font-family: "Oleo Script", 'Merriweather', 'Roboto', $headings-font-family;
-    font-size: $font-size-base * .8;
+    font-size: $font-size-base * 1;
     color: $upc_col;
 }
 

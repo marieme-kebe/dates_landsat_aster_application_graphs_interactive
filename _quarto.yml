@@ -24,10 +24,10 @@ website:
       style: "docked"
       # background: light
       contents:
-        - section: "Disponibilité Produits"
+        - section: "Disponibilité des produits"
           contents: 
             - index.qmd
-        - section: "Dynamique Températures"
+        - section: "Dynamique des températures"
           contents: 
             - evolution_temperatures.qmd
 
