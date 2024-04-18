@@ -382,7 +382,7 @@ landsat_and_aster_temperature_line_plot<- landsat_and_aster |>
   theme(
     strip.background = element_rect(fill="white", color="gray", linewidth=1),
     axis.title=element_blank(),    # omettre l'axe des ordonnées
-    axis.text=element_text(size=12, hjust=.5), # étiquette de l'axe des abscisses
+    axis.text=element_text(size=9, hjust=.5), # étiquette de l'axe des abscisses
     plot.title=element_blank(), # masquer le titre du graphique
     plot.background=element_rect(fill="white", color=NA), # couleur du fond du plan
     plot.margin=margin(rep(.3, 4), unit="cm"),
@@ -392,7 +392,7 @@ landsat_and_aster_temperature_line_plot<- landsat_and_aster |>
     # panel.grid=element_line(color="gray", linewidth=.35),
     legend.position=c(.94, .08),
     legend.title=element_blank(),
-    legend.text=element_text(size=12, margin=margin(l=-.02, unit="cm")),
+    legend.text=element_text(size=9, margin=margin(l=-.02, unit="cm")),
     legend.key=element_blank(),
     legend.background=element_blank()
   )

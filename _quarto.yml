@@ -78,7 +78,7 @@ website:
 format:
   html:
     grid:
-      sidebar-width: 350px
+      sidebar-width: 300px
       margin-width: 0px
       body-width: 1250px
     theme: 
