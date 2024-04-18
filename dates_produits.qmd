@@ -84,44 +84,10 @@ final_df2<- dplyr::mutate(
 
 ::: {.panel-tabset}
 
-## Graphique interactive 1
+# Fréquence des images par année
+![](img/frequency_plot.png)
 
-```{r error=TRUE, warning=FALSE, message=FALSE}
-#| echo: false
-
-plotly::ggplotly(
-  final_df |>
-  na.omit() |>
-  ggplot() +
-  geom_point(
-    aes(x=Mois, y=Date, fill=Produit), color="gray",  size = 3, 
-    shape = 22, position=position_dodge(width=.3)
-  ) +
-  scale_y_date(
-    date_breaks = "1 year", date_labels="%Y", 
-    expand=c(0.01, 0.01), limits=c(as.Date("2016/01/01"), as.Date("2024/03/31"))
-  ) + 
-  # défnir les couleurs du graphiques
-  scale_fill_manual(values=c("#FEB24C", "#6BAED6")) +
-  theme_bw()+
-  theme(
-    strip.background = element_rect(fill="white", color="gray", linewidth=1),
-    axis.title=element_blank(),    # omettre l'axe des ordonnées
-    axis.text.x=element_text(size=12, face="bold", hjust=.5), # étiquette de l'axe des abscisses
-    axis.text.y=element_text(size=12, face="bold", hjust=.5),
-    # plot.background=element_rect(fill="white", color=NA), # couleur du fond du plan
-    plot.margin=margin(rep(.3, 4), unit="cm"),
-    # panel.background=element_rect(fill="white", color="gray", linewidth=1),
-    legend.position=c(.96, .08),
-    legend.title=element_text(size=12, face="bold", hjust=.5),
-    legend.text=element_text(size=12, margin=margin(l=-.02, unit="cm")),
-    legend.key=element_blank(),
-    legend.background=element_blank()
-  )
-)
-```
-
-## Graphique interactive 2
+# Dates LANDSAT-ASTER (Graph1)
 
 ```{r error=TRUE, warning=FALSE, message=FALSE}
 #| echo: false
@@ -157,9 +123,46 @@ plotly::ggplotly(
     # panel.background=element_rect(fill="white", color="gray", linewidth=1),
     panel.spacing.x=unit(3, "cm"),
     panel.spacing.y=unit(10, "cm"),
-    panel.grid=element_blank()search?q=github+login&sca_esv=9b107820ee34c717&sxsrf=ACQVn08W9oYeJAleCfWPG2JQrUqEAUBC5g%3A1713309201168&ei=EQYfZpj2CZqfkdUPl-mdUA&oq=github+logi&gs_lp=Egxnd3Mtd2l6LXNlcnAiC2dpdGh1YiBsb2dpKgIIADILEAAYgAQYsQMYgwEyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMggQABiABBjLATIFEAAYgAQyCBAAGIAEGMsBMggQABiABBjLATIIEAAYgAQYywFI-hhQlQhY_w1wAngBkAEAmAE6oAHhAaoBATS4AQHIAQD4AQGYAgagAv8BwgIKEAAYRxjWBBiwA8ICDRAAGIAEGIoFGEMYsAPCAhkQLhiABBiKBRhDGMcBGNEDGMgDGLAD2AEBwgIKEAAYgAQYFBiHApgDAIgGAZAGC7oGBAgBGAiSBwE2oAfSEw&sclient=gws-wiz-serp,
+    panel.grid=element_blank(),
     legend.position=c(.96, .08),
     legend.title=element_blank(),
+    legend.text=element_text(size=12, margin=margin(l=-.02, unit="cm")),
+    legend.key=element_blank(),
+    legend.background=element_blank()
+  )
+)
+```
+
+# Dates LANDSAT-ASTER (Graph2)
+
+```{r error=TRUE, warning=FALSE, message=FALSE}
+#| echo: false
+
+plotly::ggplotly(
+  final_df |>
+  na.omit() |>
+  ggplot() +
+  geom_point(
+    aes(x=Mois, y=Date, fill=Produit), color="gray",  size = 3, 
+    shape = 22, position=position_dodge(width=.3)
+  ) +
+  scale_y_date(
+    date_breaks = "1 year", date_labels="%Y", 
+    expand=c(0.01, 0.01), limits=c(as.Date("2016/01/01"), as.Date("2024/03/31"))
+  ) + 
+  # défnir les couleurs du graphiques
+  scale_fill_manual(values=c("#FEB24C", "#6BAED6")) +
+  theme_bw()+
+  theme(
+    strip.background = element_rect(fill="white", color="gray", linewidth=1),
+    axis.title=element_blank(),    # omettre l'axe des ordonnées
+    axis.text.x=element_text(size=12, face="bold", hjust=.5), # étiquette de l'axe des abscisses
+    axis.text.y=element_text(size=12, face="bold", hjust=.5),
+    # plot.background=element_rect(fill="white", color=NA), # couleur du fond du plan
+    plot.margin=margin(rep(.3, 4), unit="cm"),
+    # panel.background=element_rect(fill="white", color="gray", linewidth=1),
+    legend.position=c(.96, .08),
+    legend.title=element_text(size=12, face="bold", hjust=.5),
     legend.text=element_text(size=12, margin=margin(l=-.02, unit="cm")),
     legend.key=element_blank(),
     legend.background=element_blank()

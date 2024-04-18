@@ -24,12 +24,12 @@ website:
       style: "docked"
       # background: light
       contents:
-        - section: "Dates Produits"
+        - section: "Disponibilité Produits"
           contents: 
             - index.qmd
         - section: "Dynamique Températures"
           contents: 
-            - evolution_landsat_temperature.qmd
+            - evolution_temperatures.qmd
 
   navbar:
     logo: img/site_logo.png
