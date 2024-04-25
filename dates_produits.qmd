@@ -26,11 +26,12 @@ landsat_metadata<- readxl::read_excel(
 landsat_dates<- base::data.frame(Date = landsat_metadata$dateprod, Produit = "LANDSAT")
 
 # Lire le fichier contenat les dates LANDSAT
-aster_dates<- utils::read.csv(
-  "./data/ASTER_dates.csv"
+aster_dates<- readxl::read_excel(
+  "./data/ASTER_dates.xlsx"
 ) |>
+dplyr::select(Date) |>
   # supprimer les doublons
-  dplyr::mutate(Produit = "ASTER") |>
+  dplyr::mutate(Produit = "ASTER", Date = as.character(as.Date(Date))) |>
   dplyr::distinct()
 
 # Générer une séquence de dates sur la période 2016-2024 au pas de temps journalier.
@@ -80,6 +81,14 @@ final_df2<- dplyr::mutate(
   final_df, 
   Produit=dplyr::case_when(base::is.na(Produit)~" ", TRUE~Produit)
 )
+
+# extraire les saisons
+saison_seche_df<- dplyr::filter(
+  final_df2, Mois %in% c("Mai", "Juin", "Juil", "Août", "Sept")
+)
+saison_humide_df<- dplyr::filter(
+  final_df2, Mois %in% c("Janv", "Fév", "Mars", "Avr", "Oct", "Nov", "Déc")
+)
 ```
 
 ::: {.panel-tabset}
@@ -89,11 +98,15 @@ final_df2<- dplyr::mutate(
 
 # Dates LANDSAT-ASTER (Graph1)
 
+::: {.panel-tabset}
+
+## Saison Sèche 
+
 ```{r error=TRUE, warning=FALSE, message=FALSE}
 #| echo: false
 
 plotly::ggplotly(
-  final_df2 |>
+  saison_seche_df |>
   ggplot(na.rm = TRUE) +
   geom_bar(aes(x=Date, y=hauteur, fill=Produit, width=hauteur), width = 15,
            stat="identity", position=position_dodge2(padding=0.2))+
@@ -132,6 +145,54 @@ plotly::ggplotly(
   )
 )
 ```
+
+## Saison Humide 
+
+```{r error=TRUE, warning=FALSE, message=FALSE}
+#| echo: false
+
+plotly::ggplotly(
+  saison_humide_df |>
+  ggplot(na.rm = TRUE) +
+  geom_bar(aes(x=Date, y=hauteur, fill=Produit, width=hauteur), width = 15,
+           stat="identity", position=position_dodge2(padding=0.2))+
+  facet_wrap(vars(Annee), scales = "free_x") +
+  # améliorer l'axe des abscisses
+  scale_x_date(date_breaks = "1 months", date_labels="%b", expand=c(0.01, 0.01))+
+  scale_y_continuous(expand=c(0.01, 0.01))+
+  # la légende
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(
+      keywidth=unit(0.4, "cm"), keyheight = unit(.8, "cm")
+    )
+  ) +
+  # défnir les couleurs du graphiques
+  scale_fill_manual(values=c("white", "#FEB24C", "#6BAED6")) +
+  theme_bw()+
+  theme(
+    axis.text.y=element_blank(), # masquer les étiquettes dans l'axe des ordonnées
+    axis.ticks.y=element_blank(),   # masquer les ticks de l'axe des ordonnées
+    strip.background = element_rect(fill="white", color="gray", linewidth=1),
+    axis.title=element_blank(),    # omettre l'axe des ordonnées
+    axis.text.x=element_text(size=6, face="bold", hjust=.5), # étiquette de l'axe des abscisses
+    strip.text=element_text(size=9, face="bold", hjust=.5), # titre des panels graphiques
+    plot.title=element_blank(), # masquer le titre du graphique
+    # plot.background=element_rect(fill="white", color=NA), # couleur du fond du plan
+    plot.margin=margin(rep(.3, 4), unit="cm"),
+    # panel.background=element_rect(fill="white", color="gray", linewidth=1),
+    panel.spacing.x=unit(3, "cm"),
+    panel.spacing.y=unit(10, "cm"),
+    panel.grid=element_blank(),
+    legend.position=c(.96, .08),
+    legend.title=element_blank(),
+    legend.text=element_text(size=12, margin=margin(l=-.02, unit="cm")),
+    legend.key=element_blank(),
+    legend.background=element_blank()
+  )
+)
+```
+
+:::
 
 # Dates LANDSAT-ASTER (Graph2)
 
